@@ -3,6 +3,7 @@ import { SmartReqOptions, SmartResponse, Strategy, StrategyName } from "./types.
 export async function runEngine(url: string, options: SmartReqOptions, strategies: Strategy[]): Promise<SmartResponse> {
   const start = Date.now();
   let attempts = 0;
+  let lasterror: any;
 
   for (const strategy of strategies) {
     try {
@@ -22,10 +23,23 @@ export async function runEngine(url: string, options: SmartReqOptions, strategie
         }
       };
     } catch(e: any) {
-      console.error(`'${strategy.name}' strategy failed, trying next strategy`);
+      lasterror = e;
+      console.warn(`'${strategy.name}' failed: ${e.message}`);
       continue;
     }
   }
 
-  throw new Error("All strategies failed");
+  return {
+    data: null,
+    status: null,
+    error: {
+      message: lasterror?.message || "All strategies failed",
+    },
+    meta: {
+      strategy: null,
+      attempts,
+      duration: Date.now() - start,
+      fallbackUsed: attempts > 1,
+    }
+  }
 }

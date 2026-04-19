@@ -19,11 +19,16 @@ export interface SmartReqOptions {
 }
 
 export interface SmartResponse {
-  data: any;
-  status: number;
+  data: any | null;
+  status: number | null;
+
+  error?: {
+    message: string;
+    strategy?: StrategyName;
+  };
 
   meta: {
-    strategy: StrategyName;
+    strategy: StrategyName | null;
     attempts: number;
     duration: number;
     fallbackUsed: boolean;
