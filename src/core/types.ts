@@ -3,7 +3,7 @@ export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS";
 
 export interface Strategy {
   name: StrategyName,
-  execute(url: string, options: SmartReqOptions): Promise<Response>,
+  execute(url: string, options: SmartReqOptions, signal: AbortSignal): Promise<Response>,
 }
 
 export interface SmartReqOptions {
@@ -14,9 +14,15 @@ export interface SmartReqOptions {
   strategy?: StrategyName | "auto";
   retries?: number;
   timeout?: number;
-
-  debug?: boolean;
+  maxDuration?: number;
 }
+
+export type TimelineEvent = {
+  time?: number;
+  strategy: StrategyName | null;
+  type: "start" | "success" | "failed" | "timeout";
+  message?: string;
+};
 
 export interface SmartResponse {
   data: any | null;
@@ -30,6 +36,7 @@ export interface SmartResponse {
   meta: {
     strategy: StrategyName | null;
     attempts: number;
+    timeline: TimelineEvent[];
     duration: number;
     fallbackUsed: boolean;
   };
