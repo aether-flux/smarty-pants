@@ -26,14 +26,16 @@ export type TimelineEvent = {
   message?: string;
 };
 
+export type ErrorResponse = {
+  message: string;
+  strategy?: string;
+};
+
 export interface SmartResponse {
   data: any | null;
   status: number | null;
 
-  error?: {
-    message: string;
-    strategy?: string;
-  };
+  error?: ErrorResponse;
 
   meta: {
     strategy: string | null;

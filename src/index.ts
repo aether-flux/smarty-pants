@@ -5,7 +5,6 @@ const mystrat: Strategy = {
   name: 'fastaf',
   async execute(url, options) {
     try {
-      setTimeout(() => {}, 2500);
       const res = await fetch(url, {
         method: options.method,
         headers: options.headers,
@@ -21,7 +20,12 @@ const mystrat: Strategy = {
 const smarty = new Smarty().addStrategy(mystrat);
 
 const res = await smarty.fetch("http://example.com", {
-  strategy: 'fastaf',
+  strategy: 'auto',
+});
+
+const res2 = await smarty.fetch("https://api.ipify.com", {
+  strategy: 'auto',
 });
 
 console.log(JSON.stringify(res, null, 2));
+console.log(JSON.stringify(res2, null, 2));

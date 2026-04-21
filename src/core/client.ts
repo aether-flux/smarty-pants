@@ -6,6 +6,7 @@ import { resolveStrategies } from "../utils/getStrategyByName.js";
 
 export class Smarty<T extends string = never> {
   private strategies: Map<string, Strategy<any>>;
+  private lastSuccessfulStrat: string | null = null;
 
   constructor() {
     this.strategies = new Map();
@@ -27,7 +28,19 @@ export class Smarty<T extends string = never> {
 
   resolveStrategies(strategy: StrategyName | T | (StrategyName | T)[] | "auto"): Strategy[] {
     if (strategy === "auto") {
-      return ['direct', 'tor'].map(name => this.getStrategy(name as T));
+      // return ['direct', 'tor'].map(name => this.getStrategy(name as T));
+      const base: string[] = Array.from(this.strategies.keys());
+
+      if (this.lastSuccessfulStrat) {
+        const ordered = [
+          this.lastSuccessfulStrat,
+          ...base.filter(s => s !== this.lastSuccessfulStrat),
+        ];
+
+        return ordered.map(name => this.getStrategy(name as T));
+      }
+
+      return base.map(name => this.getStrategy(name as T));
     }
 
     if (Array.isArray(strategy)) {
@@ -41,7 +54,13 @@ export class Smarty<T extends string = never> {
     const strat = options.strategy ?? "auto";
     const strats = this.resolveStrategies(strat);
 
-    return runEngine(url, options, strats);
+    const res = await runEngine(url, options, strats);
+
+    if (res.meta.strategy) {
+      this.lastSuccessfulStrat = res.meta.strategy;
+    }
+
+    return res;
   }
 }
 

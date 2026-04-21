@@ -4,6 +4,7 @@ export async function runEngine(url: string, options: SmartReqOptions, strategie
   const start = Date.now();
   let attempts = 0;
   let lasterror: any;
+  let laststrat: string | null = null;
 
   const timeline: TimelineEvent[] = [];
   const log = (event: TimelineEvent) => {
@@ -21,6 +22,7 @@ export async function runEngine(url: string, options: SmartReqOptions, strategie
   for (const strategy of strategies) {
     if (globalController.signal.aborted) {
       lasterror = new Error("Global timeout exceeded");
+      laststrat = null;
       break;
     }
 
@@ -49,9 +51,7 @@ export async function runEngine(url: string, options: SmartReqOptions, strategie
     } catch(e: any) {
       log({ type: 'failed', strategy: strategy.name, message: e.message });
       lasterror = e;
-      // console.warn(`'${strategy.name}' failed: ${e.message}`);
-
-      // log({ type: 'failed', strategy: strategy.name });
+      laststrat = strategy.name;
       continue;
     }
   }
@@ -62,7 +62,8 @@ export async function runEngine(url: string, options: SmartReqOptions, strategie
     data: null,
     status: null,
     error: {
-      message: lasterror?.message || "All strategies failed",
+      message: lasterror?.message || "All stategies failed",
+      ...(laststrat && { strategy: laststrat })
     },
     meta: {
       strategy: null,
