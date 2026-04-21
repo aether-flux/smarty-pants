@@ -1,17 +1,19 @@
 export type StrategyName = "direct" | "tor";
 export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS";
 
-export interface Strategy {
-  name: StrategyName,
-  execute(url: string, options: SmartReqOptions, signal: AbortSignal): Promise<Response>,
+export interface Strategy<N extends string = string> {
+  name: N,
+  execute(url: string, options: SmartReqOptions, signal?: AbortSignal): Promise<Response>,
 }
 
-export interface SmartReqOptions {
+export type StrategyInput<T extends string> = StrategyName | T | (StrategyName | T)[] | "auto";
+
+export interface SmartReqOptions<T extends string = string> {
   method?: Method;
   headers?: Record<string, string>;
   body?: any;
 
-  strategy?: StrategyName | "auto";
+  strategy?: StrategyInput<T>;
   retries?: number;
   timeout?: number;
   maxDuration?: number;
@@ -19,7 +21,7 @@ export interface SmartReqOptions {
 
 export type TimelineEvent = {
   time?: number;
-  strategy: StrategyName | null;
+  strategy: string | null;
   type: "start" | "success" | "failed" | "timeout";
   message?: string;
 };
@@ -30,11 +32,11 @@ export interface SmartResponse {
 
   error?: {
     message: string;
-    strategy?: StrategyName;
+    strategy?: string;
   };
 
   meta: {
-    strategy: StrategyName | null;
+    strategy: string | null;
     attempts: number;
     timeline: TimelineEvent[];
     duration: number;

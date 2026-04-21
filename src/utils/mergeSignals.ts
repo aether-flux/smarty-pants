@@ -1,4 +1,4 @@
-export const mergeSignals = (signal1: AbortSignal, signal2: AbortSignal): AbortSignal => {
+export const mergeSignals = (signal1: AbortSignal, signal2: AbortSignal | undefined | null): AbortSignal => {
   const controller = new AbortController();
   const abort = () => controller.abort();
 

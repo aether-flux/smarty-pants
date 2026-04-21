@@ -10,7 +10,7 @@ export const directStrategy: Strategy = {
     let lasterror: any;
 
     while (retries > 0) {
-      if (globalSignal.aborted) {
+      if (globalSignal?.aborted) {
         throw new Error("Global timeout exceeded");
       }
 
@@ -24,7 +24,7 @@ export const directStrategy: Strategy = {
           method: options.method,
           headers: options.headers,
           body: options.body,
-          signal: mergeSignals(globalSignal, controller.signal),
+          signal: mergeSignals(controller.signal, globalSignal),
         });
 
         clearTimeout(timeoutId);
@@ -41,7 +41,7 @@ export const directStrategy: Strategy = {
       } catch(e: any) {
         clearTimeout(timeoutId);
 
-        if (globalSignal.aborted) {
+        if (globalSignal?.aborted) {
           throw new Error("Global timeout exceeded");
         }
 

@@ -13,7 +13,7 @@ export const torStrategy: Strategy = {
     let lasterror: any;
 
     while (retries > 0) {
-      if (globalSignal.aborted) {
+      if (globalSignal?.aborted) {
         throw new Error("Global timeout exceeded");
       }
 
@@ -28,7 +28,7 @@ export const torStrategy: Strategy = {
           headers: options.headers,
           body: options.body,
           dispatcher,
-          signal: mergeSignals(globalSignal, controller.signal),
+          signal: mergeSignals(controller.signal, globalSignal),
         } as any);
 
         clearTimeout(timeoutId);
@@ -45,7 +45,7 @@ export const torStrategy: Strategy = {
       } catch(e: any) {
         clearTimeout(timeoutId);
 
-        if (globalSignal.aborted) {
+        if (globalSignal?.aborted) {
           throw new Error("Global timeout exceeded");
         }
 
