@@ -1,5 +1,5 @@
 {
-  "name": "smarty-pants",
+  "name": "@aetherflux/smarty-pants",
   "version": "1.0.0",
   "description": "A pluggable smart request engine with retry, fallback, and adaptive strategy execution.",
   "type": "module",
