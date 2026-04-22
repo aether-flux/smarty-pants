@@ -5,7 +5,7 @@ export const directStrategy: Strategy = {
   name: "direct",
 
   async execute(url, options, globalSignal) {
-    const timeout = options.timeout ?? 5000;
+    const timeout = options.timeout ?? 10000;
     let retries = options.retries ?? 3;
     let lasterror: any;
 

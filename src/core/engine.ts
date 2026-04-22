@@ -12,7 +12,7 @@ export async function runEngine(url: string, options: SmartReqOptions, strategie
   }
 
   const globalController = new AbortController();
-  const maxDuration = options.maxDuration ?? 10000;
+  const maxDuration = options.maxDuration ?? 20000;
   let globalTimeoutId: any;
 
   globalTimeoutId = setTimeout(() => {

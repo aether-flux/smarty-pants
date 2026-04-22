@@ -1,16 +1,53 @@
 {
   "name": "smarty-pants",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A pluggable smart request engine with retry, fallback, and adaptive strategy execution.",
+  "type": "module",
+
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+
   "scripts": {
     "lint": "npx @biomejs/biome check './src'",
-    "dev": "node dist/index.js"
+    "build": "npx tsc",
+    "prepublishOnly": "npm run build",
+    "test": "npm run build && node dist/test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
+
+  "keywords": [
+    "http",
+    "fetch",
+    "request",
+    "response",
+    "retry",
+    "network",
+    "fallback",
+    "tor",
+    "typescript",
+    "sdk"
+  ],
+  "author": "Amartya Chowdhury (aether-flux)",
+  "license": "MIT",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aether-flux/smarty-pants"
+  },
+  "bugs": {
+    "url": "https://github.com/aether-flux/smarty-pants/issues"
+  },
+  "homepage": "https://github.com/aether-flux/smarty-pants",
+
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
     "@types/node": "^25.6.0",
